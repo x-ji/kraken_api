@@ -29,6 +29,7 @@ defmodule KrakenApi.Mixfile do
     [
       {:poison, "~> 3.1"},
       {:httpoison, "~> 0.13"},
+      {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
 

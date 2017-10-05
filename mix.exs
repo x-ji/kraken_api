@@ -41,7 +41,7 @@ defmodule KrakenApi.Mixfile do
       files: ["lib", "mix.exs", "README*", "readme*", "LICENSE*", "license*"],
       maintainers: ["JI Xiang"],
       licenses: ["MIT"],
-      links: %{"GitHub" => https://github.com/x-ji/kraken_api}
+      links: %{"GitHub" => "https://github.com/x-ji/kraken_api"}
     ]
   end
 end

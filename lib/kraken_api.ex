@@ -118,18 +118,102 @@ defmodule KrakenApi do
   - pair = asset pair to get spread data for
   - since = return spread data since given id (optional.  inclusive)
   """
-  def get_recent_spread_data() do
+  def get_recent_spread_data(params \\ %{}) do
     invoke_public_api("Spread" <> URI.encode_query(params))
+  end
+
+  @doc """
+  Get account balance
+
+  ## Example
+      iex(1)> KrakenApi.get_account_balance()
+      {:ok,
+      %{"BCH" => "...", "XETH" => "...", "XLTC" => "...",
+       "XXBT" => "...", "XZEC" => "...", "ZEUR" => "..."}}
+  """
+  def get_account_balance(params \\ %{}) do
+    invoke_private_api("Balance", params)
+  end
+
+  @doc """
+  Get trade balance
+
+  """
+  def get_trade_balance(params \\ %{}) do
+    invoke_private_api("TradeBalance", params)
+  end
+
+  @doc """
+  Get open orders
+  """
+  def get_open_orders(params \\ %{}) do
+    invoke_private_api("OpenOrders", params)
+  end
+
+  @doc """
+  Get closed orders
+  """
+  def get_closed_orders(params \\ %{}) do
+    invoke_private_api("ClosedOrders", params)
+  end
+
+  @doc """
+  Query orders info
+  """
+  def query_orders_info(params \\ %{}) do
+    invoke_private_api("QueryOrders", params)
+  end
+
+  @doc """
+  Get trades history
+  """
+  def get_trades_history(params \\ %{}) do
+    invoke_private_api("TradesHistory", params)
+  end
+
+  @doc """
+  Query trades info
+  """
+  def query_trades_info(params \\ %{}) do
+    invoke_private_api("QueryTrades", params)
+  end
+
+  @doc """
+  Get open positions
+  """
+  def get_open_positions(params \\ %{}) do
+    invoke_private_api("OpenPositions", params)
+  end
+
+  @doc """
+  Get ledgers info
+  """
+  def get_ledgers_info(params \\ %{}) do
+    invoke_private_api("Ledgers", params)
+  end
+
+  @doc """
+  Query ledgers
+  """
+  def query_ledgers(params \\ %{}) do
+    invoke_private_api("QueryLedgers", params)
+  end
+
+  @doc """
+  Get trade volume
+  """
+  def get_trade_volume(params \\ %{}) do
+    invoke_private_api("TradeVolume", params)
   end
 
   @doc """
   Function to sign the private request.
   """
-  defp sign(path, request, secret, nonce \\ DateTime.utc_now() |> DateTime.to_unix(:millisecond)) do
-    postdata = Plug.Conn.Query.encode(request)
-    decoded_secret = Base.decode64!(secret)
-    hash_result = :crypto.hash(:sha256, nonce <> postdata)
-    hmac_result = :crypto.hmac(:sha512, decoded_secret, path <> hash_result)
+  def sign(path, post_data, private_key, nonce) do
+    post_data = URI.encode_query(post_data)
+    decoded_key = Base.decode64!(private_key)
+    hash_result = :crypto.hash(:sha256, nonce <> post_data)
+    :crypto.hmac(:sha512, decoded_key, path <> hash_result) |> Base.encode64
   end
 
   # Helper method to invoke the public APIs
@@ -139,6 +223,27 @@ defmodule KrakenApi do
     <> "/public/" <> method
 
     case HTTPoison.get(query_url) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        body = Poison.decode!(body)
+        {:ok, Map.get(body, "result")}
+      _ ->
+        {:error, %{}}
+    end
+  end
+
+  defp invoke_private_api(method, post_data \\ %{}, nonce \\ DateTime.utc_now() |> DateTime.to_unix(:millisecond) |> to_string) do
+    post_data = Map.merge(post_data, %{"nonce": nonce})
+    path = "/" <> Application.get_env(:kraken_api, :api_version) <> "/private/" <> method
+    query_url = Application.get_env(:kraken_api, :api_endpoint) <> path
+
+    signed_message = sign(path, post_data, Application.get_env(:kraken_api, :private_key), nonce)
+
+    # Transform the data into list-of-tuple format required by HTTPoison.
+    post_data = Enum.map(post_data, fn({k, v}) -> {k, v} end)
+    case HTTPoison.post(query_url,
+           {:form, post_data},
+           [{"API-Key", Application.get_env(:kraken_api, :api_key)}, {"API-Sign", signed_message}, {"Content-Type", "application/x-www-form-urlencoded"}]
+         ) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         body = Poison.decode!(body)
         {:ok, Map.get(body, "result")}

@@ -3,10 +3,6 @@ defmodule KrakenApi do
   Documentation for KrakenApi.
   """
 
-  import HTTPoison
-  import Poison
-
-
   @doc """
   Get the server time.
 
@@ -268,8 +264,8 @@ defmodule KrakenApi do
     end
   end
 
-  defp invoke_private_api(method, post_data \\ %{}, nonce \\ DateTime.utc_now() |> DateTime.to_unix(:millisecond) |> to_string) do
-    post_data = Map.merge(post_data, %{"nonce": nonce})
+  defp invoke_private_api(method, params, nonce \\ DateTime.utc_now() |> DateTime.to_unix(:millisecond) |> to_string) do
+    post_data = Map.merge(params, %{"nonce": nonce})
     path = "/" <> Application.get_env(:kraken_api, :api_version) <> "/private/" <> method
     query_url = Application.get_env(:kraken_api, :api_endpoint) <> path
 

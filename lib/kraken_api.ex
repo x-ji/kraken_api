@@ -156,8 +156,8 @@ defmodule KrakenApi do
   ## Example
       iex(8)> KrakenApi.get_closed_orders(%{start: 1507204548})
       {:ok,
-      %{"closed" => ...
-        ...},
+      %{"closed" => ...},
+        ...}
   """
   def get_closed_orders(params \\ %{}) do
     invoke_private_api("ClosedOrders", params)
@@ -198,7 +198,7 @@ defmodule KrakenApi do
       ex(1)> KrakenApi.get_ledgers_info(%{type: "deposit"})
       {:ok,
       %{"count" => 125,
-       "ledger" => %{"L3OVFZ-ISK6C-L3KZ6I" => %{"aclass" => "currency",
+       "ledger" => %{"..." => %{"aclass" => "currency",
            "amount" => "...", "asset" => "XETH",
            "balance" => "...", "fee" => "...",
            "refid" => "...", "time" => ...,

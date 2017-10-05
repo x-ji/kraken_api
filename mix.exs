@@ -5,16 +5,20 @@ defmodule KrakenApi.Mixfile do
     [
       app: :kraken_api,
       version: "0.1.0",
-      elixir: "~> 1.5",
+      elixir: "~> 1.0",
       start_permanent: Mix.env == :prod,
-      deps: deps()
+      description: description(),
+      package: package(),
+      deps: deps(),
+      name: "kraken_api",
+      source_url: "https://github.com/x-ji/kraken_api"
     ]
   end
 
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger, :httpoison],
+      extra_applications: [:httpoison],
       env: [api_endpoint: "https://api.kraken.com",
             api_version: "0"]
     ]
@@ -23,10 +27,21 @@ defmodule KrakenApi.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
       {:poison, "~> 3.1"},
       {:httpoison, "~> 0.13"},
+    ]
+  end
+
+  defp description do
+    "Elixir library for Kraken (kraken.com) exchange API."
+  end
+
+  defp package do
+    [
+      files: ["lib", "mix.exs", "README*", "readme*", "LICENSE*", "license*"],
+      maintainers: ["JI Xiang"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => https://github.com/x-ji/kraken_api}
     ]
   end
 end

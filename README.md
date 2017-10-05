@@ -24,19 +24,12 @@ You'll need to provide two environment variables which supply your Kraken API ke
 ```elixir
 use Mix.Config
 
-config :kraken_api, :api_key, "YOUR_API_KEY"
-config :kraken_api, :private_key, "YOUR_PRIVATE_KEY"
+config :kraken_api,
+  api_key: "YOUR_API_KEY",
+  private_key: "YOUR_PRIVATE_KEY"
 ```
 
-You might need to keep those keys out of your version control system.
-
-Add `:kraken_api` to the list of apps in `mix.exs` of your project:
-
-```elixir
-def application do
-  [applications: [:kraken_api]]
-end
-```
+You might want to keep the key out of the version control system.
 
 ## Usage
 The names of the available methods correspond to the names listed at [https://www.kraken.com/help/api](https://www.kraken.com/help/api). For example, "Get account balance" corresponds to the method `get_account_balance(params \\ %{})`.
@@ -61,8 +54,8 @@ iex(2)> KrakenApi.get_closed_orders(%{start: 1507204548, end: 1507244548})
     ...}
 ```
 
+For the full list of API methods please refer to the [Kraken documentation](https://www.kraken.com/help/api) and the [package documentation](https://hexdocs.pm/kraken_api). The [Kraken documentation](https://www.kraken.com/help/api) also contains all the possible parameters to the methods.
 
-For the full range of API methods and their corresponding parameters please refer to the [Kraken documentation](https://www.kraken.com/help/api).
-
-
+## License
+kraken_api is released under the MIT License. See LICENSE file for more information.
 

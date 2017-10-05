@@ -152,6 +152,12 @@ defmodule KrakenApi do
 
   @doc """
   Get closed orders
+
+  ## Example
+      iex(8)> KrakenApi.get_closed_orders(%{start: 1507204548})
+      {:ok,
+      %{"closed" => ...
+        ...},
   """
   def get_closed_orders(params \\ %{}) do
     invoke_private_api("ClosedOrders", params)
@@ -187,6 +193,19 @@ defmodule KrakenApi do
 
   @doc """
   Get ledgers info
+
+  ## Example
+      ex(1)> KrakenApi.get_ledgers_info(%{type: "deposit"})
+      {:ok,
+      %{"count" => 125,
+       "ledger" => %{"L3OVFZ-ISK6C-L3KZ6I" => %{"aclass" => "currency",
+           "amount" => "...", "asset" => "XETH",
+           "balance" => "...", "fee" => "...",
+           "refid" => "...", "time" => ...,
+           "type" => "deposit"},
+            ...
+           }}}
+
   """
   def get_ledgers_info(params \\ %{}) do
     invoke_private_api("Ledgers", params)
@@ -206,10 +225,23 @@ defmodule KrakenApi do
     invoke_private_api("TradeVolume", params)
   end
 
+  ## Private user trading
   @doc """
-  Function to sign the private request.
+  Add standard order
   """
-  def sign(path, post_data, private_key, nonce) do
+  def add_standard_order(params \\ %{}) do
+    invoke_private_api("AddOrder", params)
+  end
+
+  @doc """
+  Cancel open order
+  """
+  def cancel_open_order(params \\ %{}) do
+    invoke_private_api("CancelOrder", params)
+  end
+
+  # Function to sign the private request.
+  defp sign(path, post_data, private_key, nonce) do
     post_data = URI.encode_query(post_data)
     decoded_key = Base.decode64!(private_key)
     hash_result = :crypto.hash(:sha256, nonce <> post_data)

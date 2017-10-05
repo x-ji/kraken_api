@@ -1,4 +1,4 @@
-# KrakenApi
+# kraken_api
 
 **Elixir library for Kraken (kraken.com) exchange API**
 
@@ -54,7 +54,7 @@ iex(2)> KrakenApi.get_closed_orders(%{start: 1507204548, end: 1507244548})
     ...}
 ```
 
-For the full list of API methods please refer to the [Kraken documentation](https://www.kraken.com/help/api) and the [package documentation](https://hexdocs.pm/kraken_api). The [Kraken documentation](https://www.kraken.com/help/api) also contains all the possible parameters to the methods.
+For the full list of API methods and the corresponding parameters please refer to the [Kraken documentation](https://www.kraken.com/help/api) and the [package documentation](https://hexdocs.pm/kraken_api). The [Kraken documentation](https://www.kraken.com/help/api) also contains the response formats.
 
 ## License
 kraken_api is released under the MIT License. See LICENSE file for more information.

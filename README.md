@@ -2,6 +2,8 @@
 
 **Elixir library for Kraken (kraken.com) exchange API**
 
+Note: This project is not actively updated. You may find several alternatives at https://hex.pm/packages?search=kraken&sort=recent_downloads
+
 ## Installation
 
 This package can be installed
